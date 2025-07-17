@@ -46,6 +46,20 @@ scene.add(gridHelper);
 const axesHelper = new THREE.AxesHelper(4);
 scene.add(axesHelper);
 
+const gltfLoader = new GLTFLoader();
+gltfLoader.load('assets/smol_ame_in_an_upcycled_terrarium_hololiveen', function(gltf) {
+   // What should be done once the model is loaded.
+});
+
+scene.add(model);
+
+const aLight = new THREE.AmbientLight(0xFFFFFF, 1);
+scene.add(aLight);
+
+const dLight = new THREE.DirectionalLight(0xFFFFFF, 10);
+scene.add(dLight);
+dLight.position.set(4, 10, 3);
+
 function animate() {
     renderer.render(scene, camera);
 }
