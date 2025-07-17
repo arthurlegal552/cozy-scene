@@ -111,7 +111,7 @@ h1 {
 
     animate();
 
-    renderer.color('skyblue');
+    renderer.SetClearColor('skyblue');
 
     window.addEventListener('keydown', function(e) {
       if (e.code === 'Space' && action) {
@@ -124,12 +124,10 @@ h1 {
     });
 
     window.addEventListener('keydown', function(e) {
-      if (e.code === 'V' && action) {
-        orbit.enabled = false;
-        } else {
-          orbit.enabled = true;
-        }
-    });
+  if (e.code === 'KeyV') {
+    orbit.enabled = !orbit.enabled;
+  }
+});
 
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
