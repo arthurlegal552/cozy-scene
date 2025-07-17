@@ -57,12 +57,44 @@
       console.error('Erro ao carregar o modelo:', error);
     });
 
+    loader.load('assets/smol_ame_in_an_upcycled_terrarium_hololiveen.glb', function(glb) {
+    const model = glb.scene;
+    scene.add(model);
+}, function (xhr) {
+    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+});
+
+let mixer;
+
+mixer = new THREE.AnimationMixer(model);
+
+const clips = gltf.animations;
+
+mixer = new THREE.AnimationMixer(model);
+const clip = 
+THREE.AnimationClip.findByName(clips, 'Animation');
+
+const action = mixer.clipAction(clip)
+action.play();
+
+const clock = new THREE.Clock();
     function animate() {
+      if (mixer) {
+        const delta = clock.getDelta();
+        mixer.update(delta)
+      }
       orbit.update();
       renderer.render(scene, camera);
     }
 
     renderer.setAnimationLoop(animate);
+
+    window.addEventListener('keydown', function(e) {
+      if (e.code === 'Space')
+      action.paused = !action.paused;
+    })
+
+    action.loop = THREE.LoopRepeat;
 
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
