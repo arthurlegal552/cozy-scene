@@ -5,6 +5,30 @@
   <title>lo-fi scene</title>
   <style>
     body { margin: 0; overflow: hidden; }
+
+     canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+nav, img {
+  position: relative;
+  z-index: 1;
+}
+
+nav {
+  pointer-events: none; 
+}
+
+nav * {
+  pointer-events: auto; 
+}
+
+h1 {
+  text-decoration: none;
+}
   </style>
   <script type="importmap">
     {
