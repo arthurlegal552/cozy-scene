@@ -6,12 +6,32 @@
   <style>
     body { margin: 0; overflow: hidden; }
 
-footer {
-  pointer-events: none;
-  position: relative;
-  z-index: 1;
-  text-decoration: none;
+    iframe {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: 300px;
+  height: 300px;
+  border: none;
+  opacity: 0.9;
+  z-index: 10;
+  pointer-events: auto;
 }
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 12px;
+  text-align: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
   </style>
   <script type="importmap">
     {
@@ -25,7 +45,7 @@ footer {
 <body>
 
   <footer>"Smol Ame in an Upcycled Terrarium [HololiveEn]" (https://skfb.ly/ooJO8) by Seafoam is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).</footer>
-  <iframe src="https://www.lofi.cafe/" frameborder="0" width="800" height="600"></iframe>
+  <iframe src="https://www.lofi.cafe/" frameborder="0" width="300" height="300"></iframe>
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
