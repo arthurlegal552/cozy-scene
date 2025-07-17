@@ -55,7 +55,7 @@ h1 {
     const scene = new THREE.Scene();
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0xFEFEFE);
+    renderer.setClearColor('skyblue');
     document.body.appendChild(renderer.domElement);
 
     const camera = new THREE.PerspectiveCamera(
@@ -69,13 +69,10 @@ h1 {
     const orbit = new OrbitControls(camera, renderer.domElement);
     orbit.update();
 
-    scene.add(new THREE.GridHelper(12, 12));
-    scene.add(new THREE.AxesHelper(4));
-
     const aLight = new THREE.AmbientLight(0xffffff, 1);
     scene.add(aLight);
 
-    const dLight = new THREE.DirectionalLight(0xffffff, 10);
+    const dLight = new THREE.DirectionalLight(0xffffff, 1);
     dLight.position.set(4, 10, 3);
     scene.add(dLight);
 
@@ -109,8 +106,6 @@ h1 {
     }
 
     animate();
-
-    renderer.setClearColor('skyblue');
 
     window.addEventListener('keydown', function(e) {
       if (e.code === 'Space' && action) {
