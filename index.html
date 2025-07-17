@@ -21,22 +21,21 @@
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+    const scene = new THREE.Scene();
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xFEFEFE);
     document.body.appendChild(renderer.domElement);
 
-    renderer.setClearColor(0xFEFEFE);
-
-    const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
+    camera.position.set(6, 8, 14);
 
     const orbit = new OrbitControls(camera, renderer.domElement);
-    camera.position.set(6, 8, 14);
     orbit.update();
 
     scene.add(new THREE.GridHelper(12, 12));
@@ -50,51 +49,45 @@
     scene.add(dLight);
 
     const loader = new GLTFLoader();
-    loader.load('assets/smol_ame_in_an_upcycled_terrarium_hololiveen.glb', function (gltf) {
+
+    let mixer, action;
+
+    loader.load('assets/smol_ame_in_an_upcycled_terrarium_hololiveen.glb', function(gltf) {
       const model = gltf.scene;
       scene.add(model);
+
+      const clips = gltf.animations;
+      if (clips && clips.length > 0) {
+        mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(clips, 'Animation') || clips[0];
+        action = mixer.clipAction(clip);
+        action.play();
+        action.loop = THREE.LoopRepeat;
+      }
     }, undefined, function (error) {
       console.error('Erro ao carregar o modelo:', error);
     });
 
-    loader.load('assets/smol_ame_in_an_upcycled_terrarium_hololiveen.glb', function(glb) {
-    const model = glb.scene;
-    scene.add(model);
-}, function (xhr) {
-    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-});
-
-let mixer;
-
-mixer = new THREE.AnimationMixer(model);
-
-const clips = gltf.animations;
-
-mixer = new THREE.AnimationMixer(model);
-const clip = 
-THREE.AnimationClip.findByName(clips, 'Animation');
-
-const action = mixer.clipAction(clip)
-action.play();
-
-const clock = new THREE.Clock();
+    const clock = new THREE.Clock();
     function animate() {
-      if (mixer) {
-        const delta = clock.getDelta();
-        mixer.update(delta)
-      }
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+      if (mixer) mixer.update(delta);
       orbit.update();
       renderer.render(scene, camera);
     }
 
-    renderer.setAnimationLoop(animate);
+    animate();
 
     window.addEventListener('keydown', function(e) {
-      if (e.code === 'Space')
-      action.paused = !action.paused;
-    })
-
-    action.loop = THREE.LoopRepeat;
+      if (e.code === 'Space' && action) {
+        if (action.isRunning()) {
+          action.stop();
+        } else {
+          action.play();
+        }
+      }
+    });
 
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
