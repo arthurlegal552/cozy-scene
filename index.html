@@ -40,7 +40,6 @@ h1 {
   </script>
 </head>
 <body>
-  <canvas class="ui"></canvas>
   <nav>
     <ul>
       <li>
@@ -111,7 +110,7 @@ h1 {
 
     animate();
 
-    renderer.SetClearColor('skyblue');
+    renderer.setClearColor('skyblue');
 
     window.addEventListener('keydown', function(e) {
       if (e.code === 'Space' && action) {
