@@ -32,19 +32,6 @@ footer {
   pointer-events: none;
 }
 
- button {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 20;
-      padding: 10px 15px;
-      background: rgba(0, 0, 0, 0.6);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
   </style>
   <script type="importmap">
     {
@@ -59,7 +46,6 @@ footer {
 
   <footer>"Smol Ame in an Upcycled Terrarium [HololiveEn]" (https://skfb.ly/ooJO8) by Seafoam is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).</footer>
   <iframe src="https://www.lofi.cafe/" frameborder="0" width="300" height="300"></iframe>
-  <button id="changebg">change background</button>
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -92,60 +78,31 @@ footer {
 
     const loader = new GLTFLoader();
 
-    const modelos = [
-      'assets/smol_ame_in_an_upcycled_terrarium_hololiveen.glb',
-      'assets/simple_low_poly_abandoned_brick_building' // <-- Substitua por outro modelo .glb
-    ];
-
-    let modeloAtualIndex = 0;
-    let modeloAtual = null;
     let mixer, action;
 
-    function carregarModelo(caminho) {
-      if (modeloAtual) {
-        cena.remove(modeloAtual);
-        modeloAtual.traverse(obj => {
-          if (obj.geometry) obj.geometry.dispose();
-          if (obj.material) {
-            if (Array.isArray(obj.material)) {
-              obj.material.forEach(m => m.dispose());
-            } else {
-              obj.material.dispose();
-            }
-          }
-        });
-        modeloAtual = null;
+    loader.load('assets/smol_ame_in_an_upcycled_terrarium_hololiveen.glb', function(gltf) {
+      const model = gltf.scene;
+      scene.add(model);
+
+      const clips = gltf.animations;
+      if (clips && clips.length > 0) {
+        mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(clips, 'Animation') || clips[0];
+        action = mixer.clipAction(clip);
+        action.play();
+        action.loop = THREE.LoopRepeat;
       }
-
-      loader.load(caminho, gltf => {
-        modeloAtual = gltf.scene;
-        cena.add(modeloAtual);
-
-    const clips = gltf.animations;
-        if (clips && clips.length > 0) {
-          mixer = new THREE.AnimationMixer(modeloAtual);
-          const clip = THREE.AnimationClip.findByName(clips, 'Animation') || clips[0];
-          const action = mixer.clipAction(clip);
-          action.play();
-        }
-      }, undefined, erro => {
-        console.error('Erro ao carregar modelo:', erro);
-      });
-    }
-
-    carregarModelo(modelos[modeloAtualIndex]);
-
-    document.getElementById('trocarModelo').addEventListener('click', () => {
-      modeloAtualIndex = (modeloAtualIndex + 1) % modelos.length;
-      carregarModelo(modelos[modeloAtualIndex]);
+    }, undefined, function (error) {
+      console.error('Erro ao carregar o modelo:', error);
     });
 
-    const relogio = new THREE.Clock();
-    function animar() {
-      requestAnimationFrame(animar);
-      const delta = relogio.getDelta();
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
       if (mixer) mixer.update(delta);
-      renderizador.render(cena, camera);
+      orbit.update();
+      renderer.render(scene, camera);
     }
 
     animate();
