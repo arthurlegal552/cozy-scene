@@ -66,6 +66,7 @@ footer {
     camera.position.set(6, 8, 14);
 
     const orbit = new OrbitControls(camera, renderer.domElement);
+    orbit.enabled = false;
     orbit.update();
 
     const aLight = new THREE.AmbientLight(0xffffff, 1);
@@ -115,12 +116,6 @@ footer {
         }
       }
     });
-
-    window.addEventListener('keydown', function(e) {
-  if (e.code === 'KeyV') {
-    orbit.enabled = !orbit.enabled;
-  }
-});
 
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
